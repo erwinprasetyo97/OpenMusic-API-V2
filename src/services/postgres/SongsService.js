@@ -1,11 +1,9 @@
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable object-curly-newline */
-/* eslint-disable class-methods-use-this */
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
-const { mapDBToModel } = require('../../utils/index');
+const { mapDBToModelSongsDetail } = require('../../utils');
+const { mapDBToModelSongs } = require('../../utils');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongsService {
@@ -33,8 +31,11 @@ class SongsService {
   }
 
   async getSongs() {
-    const result = await this._pool.query('SELECT * FROM songs');
-    return result.rows.map(mapDBToModel);
+    const query = {
+      text: 'SELECT id, title, performer FROM songs',
+    };
+    const result = await this._pool.query(query);
+    return result.rows.map(mapDBToModelSongs);
   }
 
   async getSongById(id) {
@@ -48,7 +49,7 @@ class SongsService {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows.map(mapDBToModel)[0];
+    return result.rows.map(mapDBToModelSongsDetail)[0];
   }
 
   async editSongById(id, { title, year, performer, genre, duration, albumId }) {
