@@ -13,6 +13,9 @@
         "no-console": "off",
         "linebreak-style": "off",
         "no-underscore-dangle": "off",
-        "camelcase": "off"
+        "camelcase": "off",
+        "object-curly-newline" : "off",
+        "max-len" : "off",
+        "newline-per-chained-call" : "off"
     }
 }
