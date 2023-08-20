@@ -16,6 +16,7 @@
         "camelcase": "off",
         "object-curly-newline" : "off",
         "max-len" : "off",
-        "newline-per-chained-call" : "off"
+        "newline-per-chained-call" : "off",
+        "import/no-extraneous-dependencies": "off"
     }
 }
