@@ -24,6 +24,8 @@ class UsersService {
     if (!result.rows.length) {
       throw new InvariantError('User gagal ditambahkan');
     }
+
+    return result.rows[0].id;
   }
 
   async verifyNewUsername(username) {
@@ -37,8 +39,6 @@ class UsersService {
     if (result.rows.length > 0) {
       throw new InvariantError('Gagal menambahkan user, Username sudah digunakan');
     }
-
-    return result.rows[0].id;
   }
 
   async getUserById(userId) {
