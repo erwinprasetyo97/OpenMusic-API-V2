@@ -119,6 +119,7 @@ const init = async () => {
       }
 
       // penanganan error seseuai kebutuhan
+      console.log(response);
       const newResponse = h.response({
         status: 'error',
         message: 'terjadi kegagalan pada server kami',
