@@ -26,7 +26,7 @@ class PlaylistsongsService {
     return result.rows[0].id;
   }
 
-  async getPlaylistsong(id) {
+  async getPlaylistsongById(id) {
     const query = {
       text: 'SELECT playlistsongs.*, song.title, song.performer FROM playlistsongs LEFT JOIN songs ON songs.id = playlistsongs.song.id WHERE playlistsongs.playlist_id = $1',
       values: [id],
@@ -38,6 +38,32 @@ class PlaylistsongsService {
     }
 
     return result.rows.map(mapDBToModel);
+  }
+
+  async deletePlaylistsong(songId, playlistId) {
+    const query = {
+      text: 'DELETE FROM playlistsongs WHERE song_id = $1 AND playlist_id = $2 RETURNING id',
+      values: [songId, playlistId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Lagu gagal dihapus');
+    }
+  }
+
+  async verifyCollaborator(songId, playlistId) {
+    const query = {
+      text: 'SELECT * FROM playlistsongs WHERE song_id = $1 AND playlists_id = $2',
+      values: [songId, playlistId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Lagu gagal diverifikasi');
+    }
   }
 }
 

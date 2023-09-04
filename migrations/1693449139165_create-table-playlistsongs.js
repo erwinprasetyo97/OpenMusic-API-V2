@@ -20,7 +20,7 @@ exports.up = (pgm) => {
   });
 
   /*
-    Menambahkan contraint unique, kombinasi dari kolom playlist_id dan song_id.
+    Menambahkan constraint unique, kombinasi dari kolom playlist_id dan song_id.
     guna menghindari duplikasi data antara nilai keduanya
     */
   pgm.addConstraint('playlistsongs', 'unique_playlist_id_and_song_id', 'UNIQUE(playlist_id, song_id)');
