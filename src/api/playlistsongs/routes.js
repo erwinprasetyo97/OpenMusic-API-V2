@@ -4,7 +4,7 @@ const routes = (handler) => [
     path: '/playlists/{id}/songs',
     handler: handler.postPlaylistsongHandler,
     options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'playlistapp_jwt',
     },
   },
   {
@@ -12,7 +12,7 @@ const routes = (handler) => [
     path: '/playlists/{id}/songs',
     handler: handler.getPlaylistsongByidHandler,
     options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'playlistapp_jwt',
     },
   },
   {
@@ -20,7 +20,7 @@ const routes = (handler) => [
     path: '/playlists/{id}/songs',
     handler: handler.deletePlaylistsongHandler,
     options: {
-      auth: 'playlistsapp_jwt',
+      auth: 'playlistapp_jwt',
     },
   },
 ];

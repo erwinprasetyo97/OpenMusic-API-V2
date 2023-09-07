@@ -39,7 +39,7 @@ class PlaylistsongsHandler {
     const playlistsongsProps = playlistsongs.map((playlistsong) => ({
       id: playlistsong.id,
       title: playlistsong.title,
-      perforemer: playlistsong.performer,
+      performer: playlistsong.performer,
     }));
 
     return {
