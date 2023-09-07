@@ -2,8 +2,7 @@
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
-const { mapDBToModelSongsDetail } = require('../../utils');
-const { mapDBToModelSongs } = require('../../utils');
+const { mapDBToModel } = require('../../utils');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongsService {
@@ -34,7 +33,7 @@ class SongsService {
       text: 'SELECT id, title, performer FROM songs',
     };
     const result = await this._pool.query(query);
-    return result.rows.map(mapDBToModelSongs);
+    return result.rows.map(mapDBToModel);
   }
 
   async getSongById(id) {
@@ -48,7 +47,7 @@ class SongsService {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows.map(mapDBToModelSongsDetail)[0];
+    return result.rows.map(mapDBToModel)[0];
   }
 
   async editSongById(id, { title, year, performer, genre, duration, albumId }) {
