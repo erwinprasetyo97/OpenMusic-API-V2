@@ -2,7 +2,7 @@
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
-const { mapDBToModel } = require('../../utils');
+const { filterPerformerSongByParam, filterTitleSongByParam, mapSongDB } = require('../../utils');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongsService {
@@ -12,11 +12,10 @@ class SongsService {
 
   async addSong({ title, year, genre, performer, duration, albumId }) {
     const id = `song-${nanoid(16)}`;
-    const insertedAt = new Date().toISOString();
 
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
-      values: [id, title, year, genre, performer, duration, albumId, insertedAt, insertedAt],
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      values: [id, title, year, genre, performer, duration, albumId],
     };
 
     const result = await this._pool.query(query);
@@ -28,12 +27,21 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
+  async getSongs(params) {
     const query = {
       text: 'SELECT id, title, performer FROM songs',
     };
     const result = await this._pool.query(query);
-    return result.rows.map(mapDBToModel);
+    const songs = result.rows;
+    let filteredSong = songs;
+    if ('title' in params) {
+      filteredSong = filteredSong.filter((s) => filterTitleSongByParam(s, params.title));
+    }
+    if ('performer' in params) {
+      filteredSong = filteredSong.filter((s) => filterPerformerSongByParam(s, params.performer));
+    }
+
+    return filteredSong;
   }
 
   async getSongById(id) {
@@ -47,20 +55,18 @@ class SongsService {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows.map(mapDBToModel)[0];
+    return result.rows.map(mapSongDB)[0];
   }
 
-  async editSongById(id, { title, year, performer, genre, duration, albumId }) {
-    const updatedAt = new Date().toISOString();
+  async editSongById(id, { title, year, performer, genre, duration }) {
     const query = {
-      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, "albumId" = $6, updated_at = $7 WHERE id = $8 RETURNING id',
-      values: [title, year, performer, genre, duration, albumId, updatedAt, id],
+      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5 WHERE id = $6 RETURNING id',
+      values: [title, year, performer, genre, duration, id],
     };
-
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Gagal memperbarui lagu, Id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
   }
 

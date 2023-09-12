@@ -5,41 +5,36 @@ const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const ClientError = require('./exceptions/ClientError');
 
-// songs
+// songs - submission 1
 const songs = require('./api/songs');
 const SongsService = require('./services/postgres/SongsService');
 const SongsValidator = require('./validator/songs');
 
-// albums
+// albums - submission 1
 const albums = require('./api/albums');
 const AlbumsService = require('./services/postgres/AlbumsService');
 const AlbumsValidator = require('./validator/albums');
 
-// users
+// users - submission 2
 const users = require('./api/users');
 const UsersService = require('./services/postgres/UsersService');
 const UsersValidator = require('./validator/users');
 
-// authentications
+// authentications - submission 2
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
-// collaborations
+// collaborations - submission 2
 const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
 
-// playlists
+// playlists - submission 2
 const playlists = require('./api/playlists');
 const PlaylistsService = require('./services/postgres/PlaylistsService');
 const PlaylistsValidator = require('./validator/playlists');
-
-// playlistsongs
-const playlistsongs = require('./api/playlistsongs');
-const PlaylistsongsService = require('./services/postgres/PlaylistsongsService');
-const PlaylistsongsValidator = require('./validator/playlistsongs');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
@@ -48,7 +43,6 @@ const init = async () => {
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const playlistsService = new PlaylistsService(collaborationsService);
-  const playlistsongsService = new PlaylistsongsService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -129,14 +123,6 @@ const init = async () => {
         playlistsService,
         usersService,
         validator: PlaylistsValidator,
-      },
-    },
-    {
-      plugin: playlistsongs,
-      options: {
-        playlistsongsService,
-        playlistsService,
-        validator: PlaylistsongsValidator,
       },
     },
   ]);

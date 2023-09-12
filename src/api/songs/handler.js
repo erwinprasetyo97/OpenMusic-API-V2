@@ -23,12 +23,17 @@ class SongsHandler {
     return response;
   }
 
-  async getSongsHandler() {
-    const songs = await this._service.getSongs();
+  async getSongsHandler(request) {
+    const params = request.query;
+    const songs = await this._service.getSongs(params);
     return {
       status: 'success',
       data: {
-        songs,
+        songs: songs.map((song) => ({
+          id: song.id,
+          title: song.title,
+          performer: song.performer,
+        })),
       },
     };
   }
@@ -46,9 +51,9 @@ class SongsHandler {
 
   async putSongByIdHandler(request) {
     this._validator.validateSongPayload(request.payload);
-    const { title, year, genre, performer, duration } = request.payload;
     const { id } = request.params;
-    await this._service.editSongById(id, { title, year, genre, performer, duration });
+
+    await this._service.editSongById(id, request.payload);
     return {
       status: 'success',
       message: 'Lagu Berhasil diperbarui',
