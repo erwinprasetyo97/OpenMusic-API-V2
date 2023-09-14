@@ -1,16 +1,18 @@
 const autoBind = require('auto-bind');
 
 class CollaborationsHandler {
-  constructor(collaborationsService, playlistsService, validator) {
+  constructor(collaborationsService, playlistsService, validator, usersService) {
     this._collaborationsService = collaborationsService;
     this._playlistsService = playlistsService;
     this._validator = validator;
+    this._usersService = usersService;
 
     autoBind(this);
   }
 
   async postCollaborationHandler(request, h) {
     this._validator.validateCollaborationPayload(request.payload);
+
     const { id: credentialId } = request.auth.credentials;
     const { playlistId, userId } = request.payload;
 
@@ -24,12 +26,14 @@ class CollaborationsHandler {
         collaborationId,
       },
     });
+
     response.code(201);
     return response;
   }
 
   async deleteCollaborationHandler(request) {
     this._validator.validateCollaborationPayload(request.payload);
+
     const { id: credentialId } = request.auth.credentials;
     const { playlistId, userId } = request.payload;
 

@@ -63,9 +63,9 @@ class SongsService {
       text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5 WHERE id = $6 RETURNING id',
       values: [title, year, performer, genre, duration, id],
     };
-    const result = await this._pool.query(query);
+    const fetch = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!fetch.rows.length) {
       throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
   }
