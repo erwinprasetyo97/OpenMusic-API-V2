@@ -1,1 +1,1 @@
-# OpenMusic-API-V1
+# OpenMusic-API-V2
